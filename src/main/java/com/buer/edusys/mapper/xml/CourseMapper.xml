@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.buer.edusys.mapper.CourseMapper">
+
+    <select id="listByStudentId" resultType="com.buer.edusys.pojo.entity.CourseDO">
+        SELECT
+            course.id,
+            course.`name`,
+            course.`start`,
+            course.`end`
+        FROM
+            course
+        WHERE
+            course.is_delete = 0
+          AND course.id EXISTS (SELECT 1
+                                    FROM student_to_course AS stc
+                                    WHERE
+                                        stc.course_id = course.id
+                                        AND stc.student_id = #{query.studentId}
+          )
+        </select>
+
+</mapper>
